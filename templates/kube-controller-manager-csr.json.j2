@@ -1,0 +1,16 @@
+{
+  "CN": "{{ kube_controller_manager_csr_cn }}",
+  "key": {
+    "algo": "{{ kube_controller_manager_csr_algo }}",
+    "size": {{ kube_controller_manager_csr_size }}
+  },
+  "names": [
+    {
+      "C": "{{ kube_controller_manager_csr_c }}",
+      "L": "{{ kube_controller_manager_csr_l }}",
+      "O": "{{ kube_controller_manager_csr_o }}",
+      "OU": "{{ kube_controller_manager_csr_ou }}",
+      "ST": "{{ kube_controller_manager_csr_st }}"
+    }
+  ]
+}

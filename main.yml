@@ -1,0 +1,28 @@
+---
+
+- name: test
+  hosts: kube
+  become: yes
+  become_user: root
+
+  tasks:
+
+  - name: create empty file
+    file:
+      path: "/root/.ssh/authorized_keys"
+      state: touch
+    
+  - name: put pubkey
+    lineinfile:
+      path: "/root/.ssh/authorized_keys"
+      line: "{{ ansible_ssh_private_key_file }}"
+      state: absent
+
+  - name: Copy Certs to the respective nodes
+    synchronize:
+      src: /root/ca/ca.pem
+      dest: /root
+      mode: pull
+    delegate_to: "{{ item }}"
+    with_inventory_hostnames: kube:!bastion
+    become: True

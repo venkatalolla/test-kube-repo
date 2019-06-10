@@ -1,0 +1,182 @@
+[bastion]
+#54.193.98.24
+ec2-54-67-32-148.us-west-1.compute.amazonaws.com ansible_ssh_extra_args='-o ForwardAgent=yes'
+
+[master]
+#54.219.181.230
+ec2-13-52-156-111.us-west-1.compute.amazonaws.com ansible_ssh_extra_args='-o ForwardAgent=yes'
+ec2-13-56-172-122.us-west-1.compute.amazonaws.com ansible_ssh_extra_args='-o ForwardAgent=yes'
+ec2-13-52-23-188.us-west-1.compute.amazonaws.com ansible_ssh_extra_args='-o ForwardAgent=yes'
+
+[worker]
+#54.215.254.47
+ec2-52-8-110-85.us-west-1.compute.amazonaws.com ansible_ssh_extra_args='-o ForwardAgent=yes'
+
+[etcd]
+#52.53.190.30
+ec2-13-52-156-111.us-west-1.compute.amazonaws.com ansible_ssh_extra_args='-o ForwardAgent=yes'
+ec2-13-56-172-122.us-west-1.compute.amazonaws.com ansible_ssh_extra_args='-o ForwardAgent=yes'
+ec2-13-52-23-188.us-west-1.compute.amazonaws.com ansible_ssh_extra_args='-o ForwardAgent=yes'
+
+[lb]
+#18.144.72.242
+ec2-54-153-94-201.us-west-1.compute.amazonaws.com ansible_ssh_extra_args='-o ForwardAgent=yes'
+
+
+[kube:children]
+bastion
+master
+worker
+etcd
+lb
+
+[kube:vars]
+
+# Add the remote_user password
+#ansible_password=levvel123
+ansible_ssh_private_key_file=~/Keys/k8s.pem
+
+# Add the root password
+#ansible_become_password=levvel123
+
+
+####################
+#                  #
+# Common Variables #
+#                  #
+####################
+
+# The directory where common binaries like CFSSL, kubectl will be installed
+common_bin_directory="/usr/local/bin"
+
+# Owner and Group of for the common binary
+common_owner="root"
+common_group="root"
+
+
+########################
+#                      #
+# CFSSL Configuration  #
+#                      #
+########################
+
+# Version of CFSSL toolkit to download and use
+cfssl_version= R1.2
+
+# Checksum of "cfssl" & "cfssljson" binary
+cfssl_checksum="sha256:eb34ab2179e0b67c29fd55f52422a94fe751527b06a403a79325fed7cf0145bd"
+cfssljson_checksum="sha256:1c9e628c3b86c3f2f8af56415d474c9ed4c8f9246630bd21c3418dbe5bf6401e"
+
+# Operarting system and Processor architecture on which "cfssl/cfssljson" should run on
+cfssl_os="linux" # use "darwin" for MacOS X, "windows" for Windows
+cfssl_arch="amd64" # other possible values="386","arm64"
+
+
+#############################
+#                           #
+# Kubectl Configuration     #
+#                           #
+#############################
+
+# Version of the Kubectl binary
+kubectl_version="v1.14.0"
+
+
+#####################################
+#                                   #
+# CA Certificates Configuration     #
+#                                   #
+#####################################
+
+## NOTE: If you want the default installation, do not change the below CA Certificates Configuration.
+# In this section you will provision a Certificate Authority that can be used to generate additional TLS certificates.
+
+# CA directory path in bastion host 
+ca_conf_directory=/root/ca
+
+# Generate the CA certificate and private key with the following Variables,
+ca_config_expiry=8760h
+ca_csr_cn=Kubernetes
+ca_csr_algo=rsa
+ca_csr_size=2048
+ca_csr_c=US
+ca_csr_l=Portland
+ca_csr_o=Kubernetes
+ca_csr_ou=CA
+ca_csr_st=Oregon
+
+# In this section you will generate client and server certificates 
+# for each Kubernetes component and a client certificate for the Kubernetes admin user.
+
+# Generate the admin client certificate and private key with the following Variables,
+admin_csr_cn=admin
+admin_csr_algo=rsa
+admin_csr_size=2048
+admin_csr_c=US
+admin_csr_l=Portland
+admin_csr_o=system:masters
+admin_csr_ou=Kubernetes The Easy Way
+admin_csr_st=Oregon
+
+# Generate the Worker Node's certificate and private keys
+worker_csr_cn=system:node
+worker_csr_algo=rsa
+worker_csr_size=2048
+worker_csr_c=US
+worker_csr_l=Portland
+worker_csr_o=system:nodes
+worker_csr_ou=Kubernetes The Easy Way
+worker_csr_st=Oregon
+
+# Generate the Kubernetes Controller Manager Certificate and Private key
+kube_controller_manager_csr_cn=system:kube-controller-manager
+kube_controller_manager_csr_algo=rsa
+kube_controller_manager_csr_size=2048
+kube_controller_manager_csr_c=US
+kube_controller_manager_csr_l=Portland
+kube_controller_manager_csr_o=system:kube-controller-manager
+kube_controller_manager_csr_ou=Kubernetes The Easy Way
+kube_controller_manager_csr_st=Oregon
+
+# Generate the Kube-proxy Certificate and Private key
+kube_proxy_csr_cn=system:kube-controller-manager
+kube_proxy_csr_algo=rsa
+kube_proxy_csr_size=2048
+kube_proxy_csr_c=US
+kube_proxy_csr_l=Portland
+kube_proxy_csr_o=system:node-proxier
+kube_proxy_csr_ou=Kubernetes The Easy Way
+kube_proxy_csr_st=Oregon
+
+# Generate the Kube-scheduler Certificate and Private key
+kube_scheduler_csr_cn=system:kube-controller-manager
+kube_scheduler_csr_algo=rsa
+kube_scheduler_csr_size=2048
+kube_scheduler_csr_c=US
+kube_scheduler_csr_l=Portland
+kube_scheduler_csr_o=system:kube-scheduler
+kube_scheduler_csr_ou=Kubernetes The Easy Way
+kube_scheduler_csr_st=Oregon
+
+# Generate the Kubernetes API Server certificate and private key
+kubernetes_csr_cn=Kubernetes
+kubernetes_csr_algo=rsa
+kubernetes_csr_size=2048
+kubernetes_csr_c=US
+kubernetes_csr_l=Portland
+kubernetes_csr_o=Kubernetes
+kubernetes_csr_ou=Kubernetes The Easy Way
+kubernetes_csr_st=Oregon
+
+# Generate the Service Account certificate and private key
+service_accounts_csr_cn=service-accounts
+service_accounts_csr_algo=rsa
+service_accounts_csr_size=2048
+service_accounts_csr_c=US
+service_accounts_csr_l=Portland
+service_accounts_csr_o=Kubernetes
+service_accounts_csr_ou=Kubernetes The Easy Way
+service_accounts_csr_st=Oregon
+
+# External IP for the HA cluster to load balance traffic between Master nodes
+kubernetes_external_ip=54.153.94.201

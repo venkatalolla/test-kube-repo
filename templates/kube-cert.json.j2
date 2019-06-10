@@ -1,0 +1,25 @@
+{
+  "CN": "{{ kubernetes_csr_cn }}",
+  "hosts": [ 
+    {% for host in groups['kube'] %}
+    "{{ hostvars[host].ansible_eth0.ipv4.address }}",
+    "{{ hostvars[host].ansible_fqdn }}",
+    "{{ hostvars[host].ansible_hostname }}",
+    "{{ external_ip }}"
+    {% endfor %}
+    "127.0.0.1"
+  ],
+  "key": {
+    "algo": "{{ kubernetes_csr_algo }}",
+    "size": {{ kubernetes_csr_size }}
+  },
+  "names": [
+    {
+      "C": "{{ kubernetes_csr_c }}",
+      "L": "{{ kubernetes_csr_l }}",
+      "O": "{{ kubernetes_csr_o }}",
+      "OU": "{{ kubernetes_csr_ou }}",
+      "ST": "{{ kubernetes_csr_st }}"
+    }
+  ]
+}

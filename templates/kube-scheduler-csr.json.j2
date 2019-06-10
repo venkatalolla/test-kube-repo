@@ -1,0 +1,16 @@
+{
+  "CN": "{{ kube_scheduler_csr_cn }}",
+  "key": {
+    "algo": "{{ kube_scheduler_csr_algo }}",
+    "size": {{ kube_scheduler_csr_size }}
+  },
+  "names": [
+    {
+      "C": "{{ kube_scheduler_csr_c }}",
+      "L": "{{ kube_scheduler_csr_l }}",
+      "O": "{{ kube_scheduler_csr_o }}",
+      "OU": "{{ kube_scheduler_csr_ou }}",
+      "ST": "{{ kube_scheduler_csr_st }}"
+    }
+  ]
+}

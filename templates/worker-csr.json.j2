@@ -1,0 +1,16 @@
+{
+  "CN": "{{ worker_csr_cn }}:{{ item }}",
+  "key": {
+    "algo": "{{ worker_csr_algo }}",
+    "size": {{ worker_csr_size }}
+  },
+  "names": [
+    {
+      "C": "{{ worker_csr_c }}",
+      "L": "{{ worker_csr_l }}",
+      "O": "{{ worker_csr_o }}",
+      "OU": "{{ worker_csr_ou}} ",
+      "ST": "{{ worker_csr_st }}"
+    }
+  ]
+}
