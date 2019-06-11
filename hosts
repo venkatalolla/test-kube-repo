@@ -1,26 +1,26 @@
 [bastion]
 #54.193.98.24
-ec2-54-67-32-148.us-west-1.compute.amazonaws.com ansible_ssh_extra_args='-o ForwardAgent=yes'
+ec2-54-215-244-0.us-west-1.compute.amazonaws.com
 
 [master]
 #54.219.181.230
-ec2-13-52-156-111.us-west-1.compute.amazonaws.com ansible_ssh_extra_args='-o ForwardAgent=yes'
-ec2-13-56-172-122.us-west-1.compute.amazonaws.com ansible_ssh_extra_args='-o ForwardAgent=yes'
-ec2-13-52-23-188.us-west-1.compute.amazonaws.com ansible_ssh_extra_args='-o ForwardAgent=yes'
+ec2-13-52-156-111.us-west-1.compute.amazonaws.com
+ec2-13-56-172-122.us-west-1.compute.amazonaws.com
+ec2-13-52-23-188.us-west-1.compute.amazonaws.com
 
 [worker]
 #54.215.254.47
-ec2-52-8-110-85.us-west-1.compute.amazonaws.com ansible_ssh_extra_args='-o ForwardAgent=yes'
+ec2-52-8-110-85.us-west-1.compute.amazonaws.com
 
 [etcd]
 #52.53.190.30
-ec2-13-52-156-111.us-west-1.compute.amazonaws.com ansible_ssh_extra_args='-o ForwardAgent=yes'
-ec2-13-56-172-122.us-west-1.compute.amazonaws.com ansible_ssh_extra_args='-o ForwardAgent=yes'
-ec2-13-52-23-188.us-west-1.compute.amazonaws.com ansible_ssh_extra_args='-o ForwardAgent=yes'
+ec2-13-52-156-111.us-west-1.compute.amazonaws.com
+ec2-13-56-172-122.us-west-1.compute.amazonaws.com
+ec2-13-52-23-188.us-west-1.compute.amazonaws.com
 
 [lb]
 #18.144.72.242
-ec2-54-153-94-201.us-west-1.compute.amazonaws.com ansible_ssh_extra_args='-o ForwardAgent=yes'
+ec2-54-153-94-201.us-west-1.compute.amazonaws.com
 
 
 [kube:children]
@@ -34,7 +34,8 @@ lb
 
 # Add the remote_user password
 #ansible_password=levvel123
-ansible_ssh_private_key_file=~/Keys/k8s.pem
+#ansible_ssh_private_key_file=~/Keys/k8s.pem
+ansible_ssh_private_key_file=~/k8s.pem
 
 # Add the root password
 #ansible_become_password=levvel123
@@ -45,7 +46,7 @@ ansible_ssh_private_key_file=~/Keys/k8s.pem
 # Common Variables #
 #                  #
 ####################
-
+    
 # The directory where common binaries like CFSSL, kubectl will be installed
 common_bin_directory="/usr/local/bin"
 
@@ -92,7 +93,7 @@ kubectl_version="v1.14.0"
 # In this section you will provision a Certificate Authority that can be used to generate additional TLS certificates.
 
 # CA directory path in bastion host 
-ca_conf_directory=/root/ca
+ca_conf_directory=/home/ec2-user/ca
 
 # Generate the CA certificate and private key with the following Variables,
 ca_config_expiry=8760h
@@ -180,3 +181,9 @@ service_accounts_csr_st=Oregon
 
 # External IP for the HA cluster to load balance traffic between Master nodes
 kubernetes_external_ip=54.153.94.201
+
+# Kube-Config direcotry in bastion
+kube_conf_directory=/home/ec2-user/kube-config
+
+# Encryption-Config direcotry in bastion
+encryption_conf_directory=/home/ec2-user/encryption-config
