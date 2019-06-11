@@ -10,7 +10,7 @@
   - name: Set temporary hostnames, internal and external IP address
     set_fact: 
       tempkubehosts: |
-        {% for host in groups['master'] %}{{ hostvars[host].ansible_fqdn }},{{ hostvars[host].ansible_hostname }},{{ hostvars[host].ansible_eth0.ipv4.address }}{% endfor %}
+        {% for host in groups['master'] %}{{ hostvars[host].ansible_fqdn }},{{ hostvars[host].ansible_hostname }},{{ hostvars[host].ansible_eth0.ipv4.address }}{%- if not loop.last %},{%- endif %}{% endfor %}
     tags:
       - generate-ca
 
