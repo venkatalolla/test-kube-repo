@@ -7,22 +7,14 @@
 
   tasks:
 
-  - name: create empty file
-    file:
-      path: "/root/.ssh/authorized_keys"
-      state: touch
-    
-  - name: put pubkey
-    lineinfile:
-      path: "/root/.ssh/authorized_keys"
-      line: "{{ ansible_ssh_private_key_file }}"
-      state: absent
-
-  - name: Copy Certs to the respective nodes
-    synchronize:
-      src: /root/ca/ca.pem
-      dest: /root
-      mode: pull
-    delegate_to: "{{ item }}"
-    with_inventory_hostnames: kube:!bastion
+  - name: Create the etcd.service file
+    template:
+      src: "etcd.service.j2"
+      dest: "/etc/systemd/system/etcd.service"
+      owner: "{{ common_owner }}"
+      group: "{{ common_group }}"
+      mode: 0644
     become: True
+    when: inventory_hostname in groups['master']
+    tags:
+      - etcd
