@@ -4,7 +4,7 @@ Documentation=https://github.com/coreos
 
 [Service]
 ExecStart=/usr/local/bin/etcd \\
-  --name {{ ansible_hostname }} \\
+  --name {{ ansible_fqdn }} \\
   --cert-file=/etc/etcd/kubernetes.pem \\
   --key-file=/etc/etcd/kubernetes-key.pem \\
   --peer-cert-file=/etc/etcd/kubernetes.pem \\
@@ -18,7 +18,7 @@ ExecStart=/usr/local/bin/etcd \\
   --listen-client-urls https://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:2379,https://127.0.0.1:2379 \\
   --advertise-client-urls https://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:2379 \\
   --initial-cluster-token etcd-cluster-0 \\
-  --initial-cluster {% for host in groups['master'] -%}controller-{{ loop.index0 }}=http://"{{ hostvars[host].ansible_eth0.ipv4.address }}":2380{%- if not loop.last %},{%- endif %}{%- endfor %} \\
+  --initial-cluster {% for host in groups['master'] -%}controller-{{ loop.index0 }}=http://{{ hostvars[host].ansible_eth0.ipv4.address }}:2380{%- if not loop.last %},{%- endif %}{%- endfor %} \\
   --initial-cluster-state new \\
   --data-dir=/var/lib/etcd
 Restart=on-failure
