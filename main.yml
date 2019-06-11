@@ -8,18 +8,18 @@
   tasks:
 
   - name: Set temporary hostnames, internal and external IP address
-  set_fact: 
-    tempkubehosts: |
-      {% for host in groups['master'] %}{{ hostvars[host].ansible_fqdn }},{{ hostvars[host].ansible_hostname }},{{ hostvars[host].ansible_eth0.ipv4.address }}{% endfor %}
-  tags:
-    - generate-ca
+    set_fact: 
+      tempkubehosts: |
+        {% for host in groups['master'] %}{{ hostvars[host].ansible_fqdn }},{{ hostvars[host].ansible_hostname }},{{ hostvars[host].ansible_eth0.ipv4.address }}{% endfor %}
+    tags:
+      - generate-ca
 
-- name: Replace /n in the list of hosts
-  set_fact:
-    kubehosts: "{{ tempkubehosts | replace('\n', '') }}"
-  tags:
-    - generate-ca
+  - name: Replace /n in the list of hosts
+    set_fact:
+      kubehosts: "{{ tempkubehosts | replace('\n', '') }}"
+    tags:
+      - generate-ca
 
-- name: value
-  debug:
-    msg: "{{ kubehosts }}"
+  - name: value
+    debug:
+      msg: "{{ kubehosts }}"
