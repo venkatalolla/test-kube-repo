@@ -4,7 +4,7 @@ Documentation=https://github.com/coreos
 
 [Service]
 ExecStart=/usr/local/bin/etcd \\
-  --name {{ ansible_fqdn }} \\
+  --name {{ ansible_nodename }} \\
   --cert-file=/etc/etcd/kubernetes.pem \\
   --key-file=/etc/etcd/kubernetes-key.pem \\
   --peer-cert-file=/etc/etcd/kubernetes.pem \\
