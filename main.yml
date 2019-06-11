@@ -7,14 +7,19 @@
 
   tasks:
 
-  - name: Create the etcd.service file
-    template:
-      src: "etcd.service.j2"
-      dest: "/etc/systemd/system/etcd.service"
-      owner: "{{ common_owner }}"
-      group: "{{ common_group }}"
-      mode: 0644
-    become: True
-    when: inventory_hostname in groups['master']
-    tags:
-      - etcd
+  - name: Set temporary hostnames, internal and external IP address
+  set_fact: 
+    tempkubehosts: |
+      {% for host in groups['master'] %}{{ hostvars[host].ansible_fqdn }},{{ hostvars[host].ansible_hostname }},{{ hostvars[host].ansible_eth0.ipv4.address }}{% endfor %}
+  tags:
+    - generate-ca
+
+- name: Replace /n in the list of hosts
+  set_fact:
+    kubehosts: "{{ tempkubehosts | replace('\n', '') }}"
+  tags:
+    - generate-ca
+
+- name: value
+  debug:
+    msg: "{{ kubehosts }}"
