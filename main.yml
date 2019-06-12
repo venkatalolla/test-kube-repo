@@ -11,7 +11,7 @@
     shell: ETCDCTL_API=3 {{ common_bin_directory }}/etcdctl -w table --endpoints={% for host in groups['master'] -%}https://{{ hostvars[host].ansible_eth0.ipv4.address }}:2379{%- if not loop.last %},{%- endif %}{%- endfor %} --cacert=/etc/etcd/ca.pem --cert=/etc/etcd/kubernetes.pem --key=/etc/etcd/kubernetes-key.pem endpoint status
     become: True
     register: result_etcd
-    when: inventory_hostname in groups['master']
+    when: inventory_hostname in groups['master[0]']
     tags:
       - etcd
 
