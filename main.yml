@@ -6,20 +6,16 @@
   become_user: root
 
   tasks:
-
-  - name: Set temporary hostnames, internal and external IP address
-    set_fact: 
-      tempkubehosts: |
-        {% for host in groups['master'] %}{{ hostvars[host].ansible_fqdn }},{{ hostvars[host].ansible_hostname }},{{ hostvars[host].ansible_eth0.ipv4.address }}{%- if not loop.last %},{%- endif %}{% endfor %}
+  
+  - name: etcd vertification
+    command: "ETCDCTL_API=3 {{ common_bin_directory }}/etcdctl -w table --endpoints={% for host in groups['master'] -%}{{ hostvars[host].ansible_hostname }}=https://{{ hostvars[host].ansible_eth0.ipv4.address }}:2379{%- if not loop.last %},{%- endif %}{%- endfor %} --cacert=/etc/etcd/ca.pem --cert=/etc/etcd/kubernetes.pem --key=/etc/etcd/kubernetes-key.pem endpoint status"
+    become: True
+    register: etcd.result
+    when: inventory_hostname in groups['master']
     tags:
-      - generate-ca
+      - etcd
 
-  - name: Replace /n in the list of hosts
-    set_fact:
-      kubehosts: "{{ tempkubehosts | replace('\n', '') }}"
-    tags:
-      - generate-ca
-
-  - name: value
+  - name: etcd etcd.result
     debug:
-      msg: "{{ kubehosts }}"
+      msg: "{{ etcd.result }}"
+    
