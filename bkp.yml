@@ -1,0 +1,63 @@
+---
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: latest
+    update_cache: yes
+  become: True
+  when: ansible_pkg_mgr == 'apt' or ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' and inventory_hostname in groups['lb']
+  tags:
+    - lb-config
+
+- name: Install Nginx
+  yum:
+    name: nginx
+    state: present
+  when: ansible_pkg_mgr == 'yum' or ansible_distribution == 'CentOS' or ansible_distribution == 'RedHat' and inventory_hostname in groups['lb']
+  become: True
+  tags:
+    - lb-config
+
+- name: Configure nginx
+  blockinfile:
+    dest: /etc/nginx/nginx.conf
+    block: |
+      stream {
+          upstream kubernetes {
+          {% for host in groups['master'] %}
+            server {{ hostvars[host].ansible_eth0.ipv4.address }}:6443;
+          {% endfor %}
+          }
+          upstream etcd {
+          {% for host in groups['master'] %}
+            server {{ hostvars[host].ansible_eth0.ipv4.address }}:2379;
+          {% endfor %}
+          }	
+          server {
+                listen 6443;
+                listen 443;
+                proxy_pass kubernetes;
+          }
+          server {
+                listen 2379;
+                proxy_pass etcd;
+          }
+      }
+    marker: "## {mark} added by Ansible-Kubernetes Playbook"
+  when: inventory_hostname in groups['lb']
+  become: True
+  notify:
+    - reload nginx
+  tags:
+    - lb-config
+
+- name: Enbale Selinux ports for 6443 and 2379
+  command: semanage port -a -t http_port_t  -p tcp {{ item }}
+  become: True
+  with_items:
+    - 6443
+    - 2379
+  ignore_errors: True
+  when: inventory_hostname in groups['lb']
+  tags:
+    - lb-config
