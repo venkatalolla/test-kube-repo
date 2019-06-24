@@ -37,8 +37,8 @@ lb
 
 # Add the remote_user password
 #ansible_password=levvel123
-#ansible_ssh_private_key_file=~/Keys/k8s.pem
-ansible_ssh_private_key_file=~/k8s.pem
+ansible_ssh_private_key_file=~/Keys/k8s.pem
+#ansible_ssh_private_key_file=~/k8s.pem
 
 # Add the root password
 #ansible_become_password=levvel123

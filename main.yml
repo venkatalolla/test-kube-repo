@@ -11,11 +11,10 @@
     shell: echo {{ service_cluster_ip_range }} | awk "{print $1}" | cut -d "." -f1-3
     become: True
     register: result_etcd
-    when: inventory_hostname in groups['master']
-    tags:
-      - etcd
+    when: inventory_hostname in groups['bastion']
 
   - name: ip
     debug:
-      msg: "{{ result_etcd.stdout }}"
+      msg: "{{ result_etcd.stdout + '.1'}}"
+    when: inventory_hostname in groups['bastion']
     
