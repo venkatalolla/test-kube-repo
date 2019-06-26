@@ -7,14 +7,8 @@
 
   tasks:
   
-  - name: etcd vertification
-    shell: echo {{ service_cluster_ip_range }} | awk "{print $1}" | cut -d "." -f1-3
-    become: True
-    register: result_etcd
-    when: inventory_hostname in groups['bastion']
-
   - name: ip
     debug:
-      msg: "{{ result_etcd.stdout + '.1'}}"
+      msg: "{{ service_cluster_ip_range | ipaddr('next_usable') }}"
     when: inventory_hostname in groups['bastion']
     

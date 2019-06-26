@@ -1,23 +1,23 @@
 [bastion]
-ec2-13-57-185-65.us-west-1.compute.amazonaws.com
+ec2-18-144-14-117.us-west-1.compute.amazonaws.com
 
 [master]
-ec2-13-57-153-211.us-west-1.compute.amazonaws.com
-ec2-13-52-145-28.us-west-1.compute.amazonaws.com
-ec2-54-153-19-247.us-west-1.compute.amazonaws.com
+ec2-52-8-47-14.us-west-1.compute.amazonaws.com
+ec2-13-52-0-225.us-west-1.compute.amazonaws.com
+ec2-54-153-0-143.us-west-1.compute.amazonaws.com
 
 [worker]
-ec2-52-53-123-71.us-west-1.compute.amazonaws.com
-ec2-13-52-113-201.us-west-1.compute.amazonaws.com
-ec2-13-57-0-148.us-west-1.compute.amazonaws.com
+ec2-13-57-137-46.us-west-1.compute.amazonaws.com
+ec2-52-8-110-145.us-west-1.compute.amazonaws.com
+ec2-13-52-84-36.us-west-1.compute.amazonaws.com
 
 [etcd]
-ec2-13-57-153-211.us-west-1.compute.amazonaws.com
-ec2-13-52-145-28.us-west-1.compute.amazonaws.com
-ec2-54-153-19-247.us-west-1.compute.amazonaws.com
+ec2-52-8-47-14.us-west-1.compute.amazonaws.com
+ec2-13-52-0-225.us-west-1.compute.amazonaws.com
+ec2-54-153-0-143.us-west-1.compute.amazonaws.com
 
 [lb]
-ec2-52-8-21-103.us-west-1.compute.amazonaws.com
+ec2-13-56-8-90.us-west-1.compute.amazonaws.com
 
 
 [kube:children]
@@ -230,7 +230,7 @@ service_cluster_ip_range=10.32.0.0/24
 pod_cluster_cidr=10.200.0.0/16
 
 # External IP for the HA cluster to load balance traffic between Master nodes
-kubernetes_external_ip=52.8.21.103
+kubernetes_external_ip=13.56.8.90
 
 ###############################
 #                             #
